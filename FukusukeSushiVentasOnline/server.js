@@ -29,8 +29,8 @@ type Query{
     getDuenoByID(id: ID!): Dueno
 }
 type Mutation{
-    addDueno(input:DuenoInput): Dueno
-    updDueno(id: ID!, input:DuenoInput): Dueno
+    addDueno(input: DuenoInput): Dueno
+    updDueno(id: ID!, input: DuenoInput): Dueno
     delDueno(id: ID!): Alert
 }
 `;
@@ -59,7 +59,8 @@ const resolvers = {
         async delDueno(obj, {id}){
             await Dueno.deleteOne({_id: id});
             return {
-                message: "Dueño eliminado"};
+                message: "Dueño eliminado"
+            };
         }
     }
 }
@@ -82,5 +83,4 @@ startServer();
 app.use(cors());
 app.listen(8091, function(){
     console.log("Servidor iniciado");
-})
-
+});
