@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const {ApolloServer, gql} = require('apollo-server-express');
 
-mongoose.connect('mongodb+srv://Amaro_Alvial:tl3ikbcYqOwqZjDW@cluster0.4w6mw.mongodb.net/FukusukeSushi?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DB}?retryWrites=true&w=majority`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
 const Dueno = require('./models/dueno');
 
