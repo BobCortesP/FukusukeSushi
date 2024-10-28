@@ -1,0 +1,77 @@
+.nav-link {
+        font-size: 14px;
+        font-family: 'Ubuntu', sans-serif;
+        color:white;
+        font-weight: 100;
+    }
+.custom-button {
+    padding: 0.8rem 0.9rem;
+    font-size: 0.875rem;
+    background-color: #3ABA6D;
+    font-family: 'Ubuntu', sans-serif;
+    color: white;
+    font-weight: 550;
+    border: none;
+}
+.custom-button:hover {
+    background-color: #34A863;
+}
+.custom-form {
+    display: flex;
+    align-items: center;
+    flex: 1; /* Permite que el formulario ocupe el ancho restante */
+    margin-left: 1rem; /* Espacio entre el botón y el formulario */
+}
+.custom-search-input {
+    max-width: 493px; /* Ajusta el ancho máximo del campo de búsqueda */
+    flex: 1; /* Permite que el campo de búsqueda se expanda */
+}
+.custom-search-button {
+    max-width: 40px;
+    background-color: white;
+    border: gray;
+    white-space: nowrap; /* Evita que el texto del botón se envuelva en varias líneas */
+}
+.logo-container {
+    flex-shrink: 0; /* Evita que el contenedor del logo se reduzca */
+}
+.img-fluid {
+    max-height: 100%; /* Asegura que la imagen se ajuste al contenedor sin deformarse */
+}
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo semitransparente */
+    border: 2px rgba(0, 0, 0, 0.9); /* Borde blanco */
+    width: 50px; /* Ancho del botón */
+    height: 50px; /* Alto del botón */
+    margin-left: 18px;
+    margin-right: 18px;
+    position: absolute;
+    top: 47%; /* Centra verticalmente */
+    transform: translateY(-50%); /* Ajuste para centrar */
+}
+.carousel {
+    margin-bottom: 100px; /* Espacio debajo del carrusel */
+}
+.carousel-indicators {
+    position: absolute;
+    bottom: -55px; /* Ajusta este valor según sea necesario para que estén debajo de las imágenes */
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-left: 0;
+    margin-left: 0;
+    margin-right: 2px;
+}
+.carousel-indicators li {
+    background-color: #C7CED1; /* Color de los indicadores inactivos */
+    width: 34px;
+    height: 8px;
+    border-radius: 41.5%;
+    margin: 3px;
+}
+.carousel-indicators .active {
+    background-color: #43D87E; /* Color del indicador activo */
+}
