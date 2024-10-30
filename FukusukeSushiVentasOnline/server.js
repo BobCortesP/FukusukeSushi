@@ -9,13 +9,16 @@ mongoose.connect(`mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGOD
     useUnifiedTopology: true,
 });
 
-const Cliente = require('./models/cliente');
-const Dueno = require('./models/dueno');
 const Persona = require('./models/persona');
 const Usuario = require('./models/usuario');
 const Producto = require('./models/producto');
 const Boleta = require('./models/boleta');
 const DetalleCompra = require('./models/detalleCompra');
+const Cliente = require('./models/cliente');
+const Dueno = require('./models/dueno');
+const Categoria = require('./models/categoria');
+const PrecioHistorico = require('./models/precioHistorico');
+const DisponibleHistorico = require('./models/disponibleHistorico');
 
 const typeDefs = gql`
 type Persona{
@@ -105,6 +108,37 @@ input DetalleCompraInput{
     total: Float!
     cantidad: Float!
 }
+type Categoria{
+    id: ID!
+    nombre: String!
+    descripcion: String!
+}
+input CategoriaInput{
+    nombre: String!
+    descripcion: String!
+}
+type PrecioHistorico{
+    id: ID!
+    fecha: String!
+    producto: String!
+    precio: Float!
+}
+input PrecioHistoricoInput{
+    fecha: String!
+    producto: String!
+    precio: Float!
+}
+type DisponibleHistorico{
+    id: ID!
+    fecha: String!
+    producto: String!
+    disponibilidad: Boolean!
+}
+input DisponibleHistoricoInput{
+    fecha: String!
+    producto: String!
+    disponibilidad: Boolean!
+}
 type Alert{
     message: String!
 }
@@ -125,6 +159,12 @@ type Query{
     getBoletaById(id: ID!): Boleta
     getDetalleCompras: [DetalleCompra]
     getDetalleCompraById(id: ID!): DetalleCompra
+    getCategorias: [Categoria]
+    getCategoriaById(id: ID!): Categoria
+    getPrecioHistoricos: [PrecioHistorico]
+    getPrecioHistoricoById(id: ID!): PrecioHistorico
+    getDisponibleHistoricos: [DisponibleHistorico]
+    getDisponibleHistoricoById(id: ID!): DisponibleHistorico
 }
 type Mutation{
     addPersona(input:PersonaInput): Persona
@@ -148,6 +188,15 @@ type Mutation{
     addDetalleCompra(input:DetalleCompraInput): DetalleCompra
     updDetalleCompra(id: ID!, input:DetalleCompraInput): DetalleCompra
     delDetalleCompra(id: ID!): Alert
+    addCategoria(input:CategoriaInput): Categoria
+    updCategoria(id: ID!, input:CategoriaInput): Categoria
+    delCategoria(id: ID!): Alert
+    addPrecioHistorico(input:PrecioHistoricoInput): PrecioHistorico
+    updPrecioHistorico(id: ID!, input:PrecioHistoricoInput): PrecioHistorico
+    delPrecioHistorico(id: ID!): Alert
+    addDisponibleHistorico(input:DisponibleHistoricoInput): DisponibleHistorico
+    updDisponibleHistorico(id: ID!, input:DisponibleHistoricoInput): DisponibleHistorico
+    delDisponibleHistorico(id: ID!): Alert
 }
 `;
 
@@ -216,6 +265,29 @@ const resolvers = {
         async getDetalleCompraById(obj, {id}){
             let detalleCompra = await DetalleCompra.findById(id);
             return detalleCompra;
+        async getCategorias(obj){
+            let categorias = await Categoria.find();
+            return categorias;
+        },
+        async getCategoriaById(obj, {id}){
+            let categoria = await Categoria.findById(id);
+            return categoria;
+        },
+        async getPrecioHistoricos(obj){
+            let precioHistoricos = await PrecioHistorico.find();
+            return precioHistoricos;
+        },
+        async getPrecioHistoricoById(obj, {id}){
+            let precioHistorico = await PrecioHistorico.findById(id);
+            return precioHistorico;
+        },
+        async getDisponibleHistoricos(obj){
+            let disponibleHistoricos = await DisponibleHistorico.find();
+            return disponibleHistoricos;
+        },
+        async getDisponibleHistoricoById(obj, {id}){
+            let disponibleHistorico = await DisponibleHistorico.findById(id);
+            return disponibleHistorico
         }
     },
     Mutation:{
@@ -338,6 +410,55 @@ const resolvers = {
             await DetalleCompra.deleteOne({_id: id});
             return {
                 message: "Detalle de compra eliminado"
+            };
+        },
+        async addCategoria(obj, {input}){
+            let categoria = new Categoria(input);
+            await categoria.save();
+            return categoria;
+        },
+        async updCategoria(obj, {id, input}){
+            let categoria = await Categoria.findByIdAndUpdate(id, input, { new: true });
+            return categoria;
+        },
+        async delCategoria(obj, {id}){
+            await Categoria.deleteOne({_id: id});
+            return {
+                message: "Categoria eliminada"
+            };
+        },
+        async addPrecioHistorico(obj, {input}){
+            let productobus = await Producto.findById(input.producto);
+            let precioHistorico = new PrecioHistorico({fecha: input.fecha, producto: productobus._id, precio: input.precio});
+            await precioHistorico.save();
+            return precioHistorico;
+        },
+        async updPrecioHistorico(obj, {id, input}){
+            let productobus = await Producto.findById(input.producto);
+            let precioHistorico = await PrecioHistorico.findByIdAndUpdate(id, {fecha: input.fecha, producto: productobus._id, precio: input.precio}, { new: true });
+            return precioHistorico;
+        },
+        async delPrecioHistorico(obj, {id}){
+            await PrecioHistorico.deleteOne({_id: id});
+            return {
+                message: "Precio Historico eliminado"
+            };
+        },
+        async addDisponibleHistorico(obj, {input}){
+            let productobus = await Producto.findById(input.producto);
+            let disponibleHistorico = new DisponibleHistorico({fecha: input.fecha, producto: productobus._id, disponibilidad: input.disponibilidad});
+            await disponibleHistorico.save();
+            return disponibleHistorico;
+        },
+        async updDisponibleHistorico(obj, {id, input}){
+            let productobus = await Producto.findById(input.producto);
+            let disponibleHistorico = await DisponibleHistorico.findByIdAndUpdate(id, {fecha: input.fecha, producto: productobus._id, disponibilidad: input.disponibilidad}, { new: true });
+            return disponibleHistorico;
+        },
+        async delDisponibleHistorico(obj, {id}){
+            await DisponibleHistorico.deleteOne({_id: id});
+            return {
+                message: "Disponible Historico eliminado"
             };
         }
     }
