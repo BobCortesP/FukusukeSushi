@@ -72,34 +72,34 @@ type Mutation{
 const resolvers = {
     Query:{
         async getDuenos(obj){
-            duenos = await Dueno.find();
+            let duenos = await Dueno.find();
             return duenos;
         },
         async getDuenoByID(obj, {id}){
-            dueno = await Dueno.findById(id);
+            let dueno = await Dueno.findById(id);
             return dueno;
         },
         async getClientes(obj){
-            clientes = await Cliente.find();
+            let clientes = await Cliente.find();
             return clientes;
         },
         async getClienteByID(obj, {id}){
-            cliente = await Cliente.findById(id);
+            let cliente = await Cliente.findById(id);
             return cliente;
         },
         async getClientesByRun(obj, {run}){
-            clientes = await Cliente.find({run: run});
+            let clientes = await Cliente.find({run: run});
             return clientes;
         }
     },
     Mutation:{
         async addCliente(obj, {input}){
-            cliente = new Cliente(input);
+            let cliente = new Cliente(input);
             await cliente.save();
             return cliente;
         },
         async updCliente(obj, {id, input}){
-            cliente = await Cliente.findByIdAndUpdate(id, input, { new: true });
+            let cliente = await Cliente.findByIdAndUpdate(id, input, { new: true });
             return cliente;
         },
         async delCliente(obj, {id}){
@@ -109,12 +109,12 @@ const resolvers = {
             };
         },
         async addDueno(obj, {input}){
-            dueno = new Dueno(input);
+            let dueno = new Dueno(input);
             await dueno.save();
             return dueno;
         },
         async updDueno(obj, {id, input}){
-            dueno = await Dueno.findByIdAndUpdate(id, input, { new: true });
+            let dueno = await Dueno.findByIdAndUpdate(id, input, { new: true });
             return dueno;
         },
         async delDueno(obj, {id}){

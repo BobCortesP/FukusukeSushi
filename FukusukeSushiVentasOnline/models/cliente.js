@@ -1,6 +1,4 @@
-const { default: mongoose } = require('mongoose');
-
-mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const clienteSchema = new mongoose.Schema({
     run: String,
