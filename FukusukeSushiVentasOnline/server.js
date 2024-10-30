@@ -265,6 +265,7 @@ const resolvers = {
         async getDetalleCompraById(obj, {id}){
             let detalleCompra = await DetalleCompra.findById(id);
             return detalleCompra;
+        },
         async getCategorias(obj){
             let categorias = await Categoria.find();
             return categorias;
