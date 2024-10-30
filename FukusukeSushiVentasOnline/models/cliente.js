@@ -1,16 +1,8 @@
 const mongoose = require('mongoose');
 
 const clienteSchema = new mongoose.Schema({
-    run: String,
-    nombreCompleto: String,
-    direccion: String,
-    comuna: String,
-    provincia: String,
-    region: String,
-    fechaNacimiento: Date,
-    sexo: String,
-    email: String,
-    telefono: String
+    usuario: {type: mongoose.Schema.Types.ObjectId, ref: 'Usuario'},
+    persona: {type: mongoose.Schema.Types.ObjectId, ref: 'Persona'}
 });
 
 module.exports = mongoose.model('Cliente', clienteSchema);
