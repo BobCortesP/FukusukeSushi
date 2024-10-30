@@ -155,16 +155,22 @@ type Query{
     getDuenoById(id: ID!): Dueno
     getProductos: [Producto]
     getProductoById(id: ID!): Producto
+    getProductosByIdCategoria(id: ID!): [Producto]
     getBoletas: [Boleta]
     getBoletaById(id: ID!): Boleta
+    getBoletasByIdCliente(id: ID!): [Boleta]
     getDetalleCompras: [DetalleCompra]
     getDetalleCompraById(id: ID!): DetalleCompra
+    getDetalleComprasByIdBoleta(id: ID!): [DetalleCompra]
+    getDetalleComprasByIdProducto(id: ID!): [DetalleCompra]
     getCategorias: [Categoria]
     getCategoriaById(id: ID!): Categoria
     getPrecioHistoricos: [PrecioHistorico]
     getPrecioHistoricoById(id: ID!): PrecioHistorico
+    getPrecioHistoricosByIdProducto(id: ID!): [PrecioHistorico]
     getDisponibleHistoricos: [DisponibleHistorico]
     getDisponibleHistoricoById(id: ID!): DisponibleHistorico
+    getDisponibleHistoricosByIdProducto(id: ID!): [DisponibleHistorico]
 }
 type Mutation{
     addPersona(input:PersonaInput): Persona
@@ -231,7 +237,7 @@ const resolvers = {
             return cliente;
         },
         async getClienteByIdUsuario(obj, {id}){
-            let cliente = await Cliente.findById(id).populate('usuario');
+            let cliente = await Cliente.find({usuario: id});
             return cliente;
         },
         async getDuenos(obj){
@@ -250,6 +256,10 @@ const resolvers = {
             let producto = await Producto.findById(id);
             return producto;
         },
+        async getProductosByIdCategoria(obj, {id}){
+            let productos = await Producto.find({categoria: id});
+            return productos;
+        },
         async getBoletas(obj){
             let boletas = await Boleta.find();
             return boletas;
@@ -258,6 +268,10 @@ const resolvers = {
             let boleta = await Boleta.findById(id);
             return boleta;
         },
+        async getBoletasByIdCliente(obj, {id}){
+            let boletas = await Boleta.find({cliente: id});
+            return boletas;
+        },
         async getDetalleCompras(obj){
             let detalleCompras = await DetalleCompra.find();
             return detalleCompras;
@@ -265,6 +279,14 @@ const resolvers = {
         async getDetalleCompraById(obj, {id}){
             let detalleCompra = await DetalleCompra.findById(id);
             return detalleCompra;
+        },
+        async getDetalleComprasByIdBoleta(obj, {id}){
+            let detalleCompras = await DetalleCompra.find({boleta: id});
+            return detalleCompras;
+        },
+        async getDetalleComprasByIdProducto(obj, {id}){
+            let detalleCompras = await DetalleCompra.find({producto: id});
+            return detalleCompras;
         },
         async getCategorias(obj){
             let categorias = await Categoria.find();
@@ -282,6 +304,10 @@ const resolvers = {
             let precioHistorico = await PrecioHistorico.findById(id);
             return precioHistorico;
         },
+        async getPrecioHistoricosByIdProducto(obj, {id}){
+            let precioHistoricos = await PrecioHistorico.find({producto: id});
+            return precioHistoricos;
+        },
         async getDisponibleHistoricos(obj){
             let disponibleHistoricos = await DisponibleHistorico.find();
             return disponibleHistoricos;
@@ -289,6 +315,10 @@ const resolvers = {
         async getDisponibleHistoricoById(obj, {id}){
             let disponibleHistorico = await DisponibleHistorico.findById(id);
             return disponibleHistorico
+        },
+        async getDisponibleHistoricosByIdProducto(obj, {id}){
+            let disponibleHistoricos = await DisponibleHistorico.find({producto: id});
+            return disponibleHistoricos;
         }
     },
     Mutation:{
