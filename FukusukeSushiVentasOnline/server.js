@@ -13,6 +13,9 @@ const Cliente = require('./models/cliente');
 const Dueno = require('./models/dueno');
 const Persona = require('./models/persona');
 const Usuario = require('./models/usuario');
+const Producto = require('./models/producto');
+const Boleta = require('./models/boleta');
+const DetalleCompra = require('./models/detalleCompra');
 
 const typeDefs = gql`
 type Persona{
@@ -67,6 +70,41 @@ input DuenoInput{
     persona: String!
     usuario: String!
 }
+type Producto{
+    id: ID!
+    nombre: String!
+    descripcion: String!
+    categoria: String!
+}
+input ProductoInput{
+    nombre: String!
+    descripcion: String!
+    categoria: String!
+}
+type Boleta{
+    id: ID!
+    cliente: String!
+    cajeroVirtual: String!
+    despacho: String!
+}
+input BoletaInput{
+    cliente: String!
+    cajeroVirtual: String!
+    despacho: String!
+}
+type DetalleCompra{
+    id: ID!
+    boleta: String!
+    producto: String!
+    total: Float!
+    cantidad: Float!
+}
+input DetalleCompraInput{
+    boleta: String!
+    producto: String!
+    total: Float!
+    cantidad: Float!
+}
 type Alert{
     message: String!
 }
@@ -81,6 +119,12 @@ type Query{
     getClienteByIdUsuario(id: ID!): Cliente
     getDuenos: [Dueno]
     getDuenoById(id: ID!): Dueno
+    getProductos: [Producto]
+    getProductoById(id: ID!): Producto
+    getBoletas: [Boleta]
+    getBoletaById(id: ID!): Boleta
+    getDetalleCompras: [DetalleCompra]
+    getDetalleCompraById(id: ID!): DetalleCompra
 }
 type Mutation{
     addPersona(input:PersonaInput): Persona
@@ -95,6 +139,15 @@ type Mutation{
     addDueno(input:DuenoInput): Dueno
     updDueno(id: ID!, input:DuenoInput): Dueno
     delDueno(id: ID!): Alert
+    addProducto(input:ProductoInput): Producto
+    updProducto(id: ID!, input:ProductoInput): Producto
+    delProducto(id: ID!): Alert
+    addBoleta(input:BoletaInput): Boleta
+    updBoleta(id: ID!, input:BoletaInput): Boleta
+    delBoleta(id: ID!): Alert
+    addDetalleCompra(input:DetalleCompraInput): DetalleCompra
+    updDetalleCompra(id: ID!, input:DetalleCompraInput): DetalleCompra
+    delDetalleCompra(id: ID!): Alert
 }
 `;
 
@@ -139,6 +192,30 @@ const resolvers = {
         async getDuenoById(obj, {id}){
             let dueno = await Dueno.findById(id);
             return dueno;
+        },
+        async getProductos(obj){
+            let productos = await Producto.find();
+            return productos;
+        },
+        async getProductoById(obj, {id}){
+            let producto = await Producto.findById(id);
+            return producto;
+        },
+        async getBoletas(obj){
+            let boletas = await Boleta.find();
+            return boletas;
+        },
+        async getBoletaById(obj, {id}){
+            let boleta = await Boleta.findById(id);
+            return boleta;
+        },
+        async getDetalleCompras(obj){
+            let detalleCompras = await DetalleCompra.find();
+            return detalleCompras;
+        },
+        async getDetalleCompraById(obj, {id}){
+            let detalleCompra = await DetalleCompra.findById(id);
+            return detalleCompra;
         }
     },
     Mutation:{
@@ -148,7 +225,7 @@ const resolvers = {
             return persona;
         },
         async updPersona(obj, {id, input}){
-            let persona = await Persona.findByIdAndUpString(id, input, { new: true });
+            let persona = await Persona.findByIdAndUpdate(id, input, { new: true });
             return persona;
         },
         async delPersona(obj, {id}){
@@ -163,7 +240,7 @@ const resolvers = {
             return usuario;
         },
         async updUsuario(obj, {id, input}){
-            let usuario = await Usuario.findByIdAndUpString(id, input, { new: true });
+            let usuario = await Usuario.findByIdAndUpdate(id, input, { new: true });
             return usuario;
         },
         async delUsuario(obj, {id}){
@@ -182,7 +259,7 @@ const resolvers = {
         async updCliente(obj, {id, input}){
             let usuarioBus = await Usuario.findById(input.usuario);
             let personaBus = await Persona.findById(input.persona);
-            let cliente = await Cliente.findByIdAndUpString(id, {usuario: usuarioBus._id, persona: personaBus._id}, { new: true });
+            let cliente = await Cliente.findByIdAndUpdate(id, {usuario: usuarioBus._id, persona: personaBus._id}, { new: true });
             return cliente;
         },
         async delCliente(obj, {id}){
@@ -194,20 +271,73 @@ const resolvers = {
         async addDueno(obj, {input}){
             let usuarioBus = await Usuario.findById(input.usuario);
             let personaBus = await Persona.findById(input.persona);
-            let dueno = await Dueno.findByIdAndUpString(id, {usuario: usuarioBus._id, persona: personaBus._id});
+            let dueno = await Dueno.findByIdAndUpdate(id, {usuario: usuarioBus._id, persona: personaBus._id});
             await dueno.save();
             return dueno;
         },
         async updDueno(obj, {id, input}){
             let usuarioBus = await Usuario.findById(input.usuario);
             let personaBus = await Persona.findById(input.persona);
-            let dueno = await Dueno.findByIdAndUpString(id, {usuario: usuarioBus._id, persona: personaBus._id}, { new: true });
+            let dueno = await Dueno.findByIdAndUpdate(id, {usuario: usuarioBus._id, persona: personaBus._id}, { new: true });
             return dueno;
         },
         async delDueno(obj, {id}){
             await Dueno.deleteOne({_id: id});
             return {
                 message: "Dueño eliminado"
+            };
+        },
+        async addProducto(obj, {input}){
+            let categoriaBus = await Categoria.findById(input.categoria);
+            let producto = new Producto({nombre: input.nombre, descripcion: input.descripcion, categoria: categoriaBus._id});
+            await producto.save();
+            return producto;
+        },
+        async updProducto(obj, {id, input}){
+            let categoriaBus = await Categoria.findById(input.categoria);
+            let producto = await Producto.findByIdAndUpdate(id, {nombre: input.nombre, descripcion: input.descripcion, categoria: categoriaBus._id}, { new: true });
+            return producto;
+        },
+        async delProducto(obj, {id}){
+            await Producto.deleteOne({_id: id});
+            return {
+                message: "Producto eliminado"
+            };
+        },
+        async addBoleta(obj, {input}){
+            let clienteBus = await Cliente.findById(input.cliente);
+            let boleta = new Boleta({cliente: clienteBus._id, cajeroVirtual: input.cajeroVirtual, despacho: input.despacho});
+            await boleta.save();
+            return boleta;
+        },
+        async updBoleta(obj, {id, input}){
+            let clienteBus = await Cliente.findById(input.cliente);
+            let boleta = await Boleta.findByIdAndUpdate(id, {cliente: clienteBus._id, cajeroVirtual: input.cajeroVirtual, despacho: input.despacho}, { new: true });
+            return boleta;
+        },
+        async delBoleta(obj, {id}){
+            await Boleta.deleteOne({_id: id});
+            return {
+                message: "Boleta eliminada"
+            };
+        },
+        async addDetalleCompra(obj, {input}){
+            let productoBus = await Producto.findById(input.producto);
+            let boletaBus = await Boleta.findById(input.boleta);
+            let detalleCompra = new DetalleCompra({producto: productoBus._id, boleta: boletaBus._id, cantidad: input.cantidad, total: input.total});
+            await detalleCompra.save();
+            return detalleCompra;
+        },
+        async updDetalleCompra(obj, {id, input}){
+            let productoBus = await Producto.findById(input.producto);
+            let boletaBus = await Boleta.findById(input.boleta);
+            let detalleCompra = await DetalleCompra.findByIdAndUpdate(id, {producto: productoBus._id, boleta: boletaBus._id, cantidad: input.cantidad, total: input.total}, { new: true });
+            return detalleCompra;
+        },
+        async delDetalleCompra(obj, {id}){
+            await DetalleCompra.deleteOne({_id: id});
+            return {
+                message: "Detalle de compra eliminado"
             };
         }
     }
