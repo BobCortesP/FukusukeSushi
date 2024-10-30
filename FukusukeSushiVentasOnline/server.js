@@ -23,7 +23,7 @@ type Persona{
     comuna: String!
     provincia: String!
     region: String!
-    fechaNacimiento: Date!
+    fechaNacimiento: String!
     sexo: String!
     telefono: String!
 }
@@ -34,7 +34,7 @@ input PersonaInput{
     comuna: String!
     provincia: String!
     region: String!
-    fechaNacimiento: Date!
+    fechaNacimiento: String!
     sexo: String!
     telefono: String!
 }
@@ -78,6 +78,7 @@ type Query{
     getUsuarioById(id: ID!): Usuario
     getClientes: [Cliente]
     getClienteById(id: ID!): Cliente
+    getClienteByIdUsuario(id: ID!): Cliente
     getDuenos: [Dueno]
     getDuenoById(id: ID!): Dueno
 }
@@ -147,7 +148,7 @@ const resolvers = {
             return persona;
         },
         async updPersona(obj, {id, input}){
-            let persona = await Persona.findByIdAndUpdate(id, input, { new: true });
+            let persona = await Persona.findByIdAndUpString(id, input, { new: true });
             return persona;
         },
         async delPersona(obj, {id}){
@@ -162,7 +163,7 @@ const resolvers = {
             return usuario;
         },
         async updUsuario(obj, {id, input}){
-            let usuario = await Usuario.findByIdAndUpdate(id, input, { new: true });
+            let usuario = await Usuario.findByIdAndUpString(id, input, { new: true });
             return usuario;
         },
         async delUsuario(obj, {id}){
@@ -181,7 +182,7 @@ const resolvers = {
         async updCliente(obj, {id, input}){
             let usuarioBus = await Usuario.findById(input.usuario);
             let personaBus = await Persona.findById(input.persona);
-            let cliente = await Cliente.findByIdAndUpdate(id, {usuario: usuarioBus._id, persona: personaBus._id}, { new: true });
+            let cliente = await Cliente.findByIdAndUpString(id, {usuario: usuarioBus._id, persona: personaBus._id}, { new: true });
             return cliente;
         },
         async delCliente(obj, {id}){
@@ -193,14 +194,14 @@ const resolvers = {
         async addDueno(obj, {input}){
             let usuarioBus = await Usuario.findById(input.usuario);
             let personaBus = await Persona.findById(input.persona);
-            let dueno = await Dueno.findByIdAndUpdate(id, {usuario: usuarioBus._id, persona: personaBus._id});
+            let dueno = await Dueno.findByIdAndUpString(id, {usuario: usuarioBus._id, persona: personaBus._id});
             await dueno.save();
             return dueno;
         },
         async updDueno(obj, {id, input}){
             let usuarioBus = await Usuario.findById(input.usuario);
             let personaBus = await Persona.findById(input.persona);
-            let dueno = await Dueno.findByIdAndUpdate(id, {usuario: usuarioBus._id, persona: personaBus._id}, { new: true });
+            let dueno = await Dueno.findByIdAndUpString(id, {usuario: usuarioBus._id, persona: personaBus._id}, { new: true });
             return dueno;
         },
         async delDueno(obj, {id}){

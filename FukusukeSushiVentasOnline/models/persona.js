@@ -7,7 +7,7 @@ const personaSchema = new mongoose.Schema({
     comuna: String,
     provincia: String,
     region: String,
-    fechaNacimiento: Date,
+    fechaNacimiento: String,
     sexo: String,
     telefono: String
 });
