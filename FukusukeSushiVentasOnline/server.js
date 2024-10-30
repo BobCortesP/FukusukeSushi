@@ -24,7 +24,6 @@ type Cliente{
     fechaNacimiento: String!
     sexo: String!
     email: String!
-    pass: String!
     telefono: String!
 }
 input ClienteInput{
@@ -37,17 +36,14 @@ input ClienteInput{
     fechaNacimiento: String!
     sexo: String!
     email: String!
-    pass: String!
     telefono: String!
 }
 type Dueno{
     id: ID!
     nombre: String!
-    pass: String!
 }
 input DuenoInput{
     nombre: String!
-    pass: String!
 }
 type Alert{
     message: String!

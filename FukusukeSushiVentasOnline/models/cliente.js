@@ -10,7 +10,6 @@ const clienteSchema = new mongoose.Schema({
     fechaNacimiento: Date,
     sexo: String,
     email: String,
-    pass: String,
     telefono: String
 });
 
