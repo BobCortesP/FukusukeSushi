@@ -60,8 +60,6 @@ type Query{
     getDuenoByID(id: ID!): Dueno
 }
 type Mutation{
-    addDueno(input: DuenoInput): Dueno
-    updDueno(id: ID!, input: DuenoInput): Dueno
     addCliente(input:ClienteInput): Cliente
     updCliente(id: ID!, input:ClienteInput): Cliente
     delCliente(id: ID!): Alert
