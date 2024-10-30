@@ -121,7 +121,6 @@ type Query{
     getPrecioHistoricoById(id: ID!): PrecioHistorico
     getDisponibleHistoricos: [DisponibleHistorico]
     getDisponibleHistoricoById(id: ID!): DisponibleHistorico
-    // Revisar el tema de la fecha
 }
 type Mutation{
     addPersona(input:PersonaInput): Persona
